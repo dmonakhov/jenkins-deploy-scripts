@@ -1,0 +1,24 @@
+---
+- name: install java devel
+  dnf: name=java-1.8.0-openjdk-devel state=installed
+- name: Install ansible
+  dnf: name=ansible state=installed
+
+- name: Install jenkins packages
+  dnf: name={{ item }} state=installed
+  with_items:
+    - jenkins-cli
+- name: Copy jenkins helper script
+  copy:
+    src: scripts/add_jenkins_node.sh
+    dest: /usr/local/bin/
+    mode: 0755
+- name: Determine memory size
+  shell: echo $(( ({{ ansible_memtotal_mb }} + 1023)/1024))
+  register: mem_gb
+
+- name: Register jenkins slave node
+  command: >
+        add_jenkins_node.sh  -s {{ jenkins_server }}  -n "{{ ansible_fqdn }}" -e 1 -m NORMAL -u root --home /var/lib/jenkins-slave
+        --creds {{ creds_id }} --labels "{{ jenkins_labels }} {{ ansible_distribution }}{{ ansible_distribution_version }} NR_VCPU={{ ansible_processor_vcpus }} MEMORY={{ mem_gb.stdout }}"
+  ignore_errors: true

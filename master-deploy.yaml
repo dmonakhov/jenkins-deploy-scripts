@@ -1,0 +1,7 @@
+- hosts: jenkins.qa.sw.ru
+  vars:
+    jenkins_hostname: jenkins.qa.sw.ru
+    jenkins_admin_username: root
+    jenkins_admin_password: 1q2w3e
+  roles:
+    - { role: geerlingguy.jenkins }

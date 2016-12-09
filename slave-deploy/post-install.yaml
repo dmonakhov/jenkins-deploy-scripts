@@ -1,0 +1,7 @@
+---
+- hosts: jankins-slave
+  tasks:
+    # Perfrorm host post install works
+    - include: tasks/post-install.yaml
+      tags:
+        - postinstall

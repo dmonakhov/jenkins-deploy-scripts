@@ -1,0 +1,19 @@
+---
+- hosts: jankins-slave
+  vars:
+    jenkins_server: http://jenkins.qa.sw.ru:8080
+    creds_id: 13c648c8-715d-4b56-a624-4b9733cc7fd6
+
+  roles:
+    - { role: dochang.docker }
+
+  tasks:
+    - include: tasks/docker-install.yaml
+      tags:
+      - config
+      - docker
+
+    - include: tasks/jenkins-register.yaml
+      tags:
+        - config
+        - jenkins

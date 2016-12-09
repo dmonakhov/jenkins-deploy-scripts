@@ -1,0 +1,18 @@
+---
+#roles:
+#  - { role: dochang.docker }
+
+#- dependencies:
+#- { role: dochang.docker }
+- name: Copy docker daemon config
+  copy:
+    src: files/daemon.json
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: docker
+    mode: 0644
+  
+- name: restart docker
+  service:
+    name: docker
+    state: restarted

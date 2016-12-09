@@ -1,0 +1,27 @@
+---
+
+- name: install python and deps for ansible modules
+  raw: dnf install -y python2 python2-dnf libselinux-python
+
+- name: gather facts
+  setup:
+
+- name: Fetch ssh keys
+  copy: src={{ item.src }} dest={{ item.dest }} mode=0600
+  with_items:
+    - { src: 'files/qanet-rsa', dest: '/root/.ssh/id_rsa' }
+    - { src: 'files/qanet-rsa.pub', dest: '/root/.ssh/id_rsa.pub' }
+
+- name: Install optional required packages
+  dnf: name={{ item }} state=installed
+  with_items:
+    - emacs-nox
+    - lm_sensors-sensord
+    - iotop
+    - fio
+    - pigz
+    - pxz
+    - lbzip2
+
+- name: Enable sensors service
+  service: name=sensord state=started enabled=yes
